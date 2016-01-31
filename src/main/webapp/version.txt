@@ -1,4 +1,4 @@
-BuildTime  20160131-2139
+BuildTime  20160201-0014
 GitVersion   null
 MavenVersion 1.0-SNAPSHOT
 GitUrl https://github.com/accphuangxin/rainbow-Web.git

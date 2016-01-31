@@ -33,8 +33,8 @@
            </Item>  
        <Item>  
            <New class="org.mortbay.jetty.webapp.WebAppContext">    
-              <Set name="contextPath">/mycat</Set>    
-                          <Set name="war">./mycat-web</Set>  <!--你的web应用根目录-->  
+              <Set name="contextPath">/rainbow</Set>    
+                          <Set name="war">./rainbow-web</Set>  <!--你的web应用根目录-->  
                  </New>    
           </Item>  
          </Array>  
