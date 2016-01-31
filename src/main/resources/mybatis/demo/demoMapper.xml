@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="DEMO">
+
+	<select id="load" resultType="map" parameterType="map">
+		SELECT 
+				guid	as "guid",  
+				user_no	as "userNo",  
+				user_name	as "userName",  
+				create_time	as "createTime",  
+				creater	as "creater",  
+				modifyer	as "modifyer",  
+				modify_time	as "modifyTime" 
+		FROM t_sys_user
+		<where>
+				and guid = #{guid}
+		</where>
+
+	</select>
+
+	<select id="query" resultType="map" parameterType="map">
+		SELECT
+				guid	as "guid",  
+				user_no	as "userNo",  
+				user_name	as "userName",  
+				create_time	as "createTime",  
+				creater	as "creater",  
+				modifyer	as "modifyer",  
+				modify_time	as "modifyTime" 
+		FROM t_sys_user
+		<where>
+			<if test="guid != null">
+				and guid = #{guid}
+			</if>
+			<if test="userNo != null">
+				and user_no = #{userNo}
+			</if>
+			<if test="userName != null">
+				and user_name = #{userName}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime}
+			</if>
+			<if test="creater != null">
+				and creater = #{creater}
+			</if>
+			<if test="modifyer != null">
+				and modifyer = #{modifyer}
+			</if>
+			<if test="modifyTime != null">
+				and modify_time = #{modifyTime}
+			</if>
+		</where>
+	</select>
+
+	<select id="count" resultType="int" parameterType="map">
+		SELECT COUNT(*) FROM t_sys_user 
+		<where>
+			<if test="guid != null">
+				and guid = #{guid}
+			</if>
+			<if test="userNo != null">
+				and user_no = #{userNo}
+			</if>
+			<if test="userName != null">
+				and user_name = #{userName}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime}
+			</if>
+			<if test="creater != null">
+				and creater = #{creater}
+			</if>
+			<if test="modifyer != null">
+				and modifyer = #{modifyer}
+			</if>
+			<if test="modifyTime != null">
+				and modify_time = #{modifyTime}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO t_sys_user (
+			guid,
+			user_no,
+			user_name,
+			create_time,
+			creater,
+			modifyer,
+			modify_time
+		)
+		VALUES ( 
+			#{guid, jdbcType=VARCHAR}, 
+			#{userNo, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
+			#{userName, jdbcType=VARCHAR}, 
+			#{createTime, jdbcType=TIMESTAMP,typeHandler=DateHandler}, 
+			#{creater, jdbcType=VARCHAR}, 
+			#{modifyer, jdbcType=VARCHAR}, 
+			#{modifyTime, jdbcType=TIMESTAMP,typeHandler=DateHandler}		)
+	</insert>
+	
+	<insert id="insertBatch" parameterType="list">
+		INSERT INTO t_sys_user (
+			guid,
+			user_no,
+			user_name,
+			create_time,
+			creater,
+			modifyer,
+			modify_time
+		)
+		VALUES 
+		<foreach collection="list" item="item" index="index" separator=",">  
+       		( 
+			#{item.guid, jdbcType=VARCHAR}, 
+			#{item.userNo, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
+			#{item.userName, jdbcType=VARCHAR}, 
+			#{item.createTime, jdbcType=TIMESTAMP,typeHandler=DateHandler}, 
+			#{item.creater, jdbcType=VARCHAR}, 
+			#{item.modifyer, jdbcType=VARCHAR}, 
+			#{item.modifyTime, jdbcType=TIMESTAMP,typeHandler=DateHandler}		)
+    	</foreach>  
+	</insert>
+	
+	
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM t_sys_user 
+		<where> 
+			guid = #{guid}
+		</where>
+	</delete>
+
+	<update id="update" parameterType="map">
+		UPDATE t_sys_user  
+		<set>
+			<if test="guid != null">
+				guid = #{guid},
+			</if>
+			<if test="userNo != null">
+				user_no = #{userNo},
+			</if>
+			<if test="userName != null">
+				user_name = #{userName},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+			<if test="creater != null">
+				creater = #{creater},
+			</if>
+			<if test="modifyer != null">
+				modifyer = #{modifyer},
+			</if>
+			<if test="modifyTime != null">
+				modify_time = #{modifyTime}
+			</if>
+		</set>
+		<where>
+			guid = #{guid}
+		</where>
+	</update>
+</mapper>

@@ -1,0 +1,309 @@
+<section class="content-header">
+  <h1>
+              新增用户授权
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i>系统元数据管理</a></li>
+    <li><a href="#"><i class="fa fa-table"></i>资源授权</a></li>
+    <li class="active">新增用户授权</li>
+  </ol>
+</section>
+<section id="addContent" class="content">
+  <div class="row">
+      <div class="col-md-12" style="border-bottom: 1px solid #ddd;">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#tab_1-1" data-toggle="tab" onclick="">用户授角色</a></li>
+			<li><a href="#tab_2-2" data-toggle="tab" onclick="">角色授用户</a></li>
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane active" id="tab_1-1" style="padding-top: 25px;">
+			   <div class="col-md-6"  >
+			   <div class="box box-primary">
+		        <div class="box-header with-border">
+		          <h3 class="box-title">用户列表</h3>
+		        </div>
+		         <div class="box-body">
+		           <form id="queryForm1">
+		           <div class="input-group input-group">
+                    <div class="input-group-btn">
+                      <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span id="userlabel">登录账号</span><span class="fa fa-caret-down"></span></button>
+                      <ul class="dropdown-menu">
+                        <li><a href="javascript:void(0);" onclick="$('#userlabel').html('登录账号');$('#userinput').attr('name','loginId');">登录账号</a></li>
+                        <li><a href="javascript:void(0);" onclick="$('#userlabel').html('真实姓名');$('#userinput').attr('name','name');">真实姓名</a></li>
+                      </ul>
+                    </div>
+                    <input id="userinput" name="loginId" type="text" class="form-control">
+                    <input type="text" style="display: none;"/>
+                    <span class="input-group-btn"><button type="button" class="btn btn-default" onclick="queryUser();">
+                     <i class="fa fa-search"></i></button></span>
+                  </div>
+	          </form>
+			     <div style="padding-top: 15px;">
+			        <table id="user_1"></table>
+			        <div style="text-align:right;">
+			            <div id="user_paginator_1"></div>
+			        </div>
+			       </div>
+		         </div>
+		        </div>
+		       
+			   </div>
+			   <div class="col-md-6">
+			    <div class="box box-primary">
+		        <div class="box-header with-border">
+		          <h3 class="box-title">角色列表</h3>
+		        </div>
+		         <div class="box-body">
+		          <div class="input-group">
+                    <div class="input-group-btn">
+                      <button type="button" class="btn btn-primary">当前用户</button>
+                    </div>
+                    <input type="text" class="form-control" id="cuser" readonly="readonly">
+                  </div>
+			     <div style="padding-top: 15px;">
+			        <table id="role_1"></table>
+			        <div style="text-align:right;">
+			            <div id="role_paginator_1"></div>
+			        </div>
+			       </div>
+		         </div>
+		        </div>
+			   </div>
+			   <div class="col-md-12">
+			    <div class="form-group">
+		            <button id="insertbt1" type="button" data-loading-text="处理中" class="btn btn-primary" onclick="insert1();">提交</button>
+		            <button type="button" class="btn btn-primary" onclick="loadContext('page/sys/authuser/authuser.html')">返回</button>
+				</div>
+	        </div>
+			</div>
+			<div class="tab-pane" id="tab_2-2" style="padding-top: 25px;">
+			 <div class="col-md-6">
+			     <div class="box box-primary">
+		        <div class="box-header with-border">
+		          <h3 class="box-title">角色列表</h3>
+		        </div>
+		         <div class="box-body">
+		          <form id="queryForm2">
+		           <div class="input-group input-group">
+                    <div class="input-group-btn">
+                      <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span id="rolelabel">角色代码</span><span class="fa fa-caret-down"></span></button>
+                      <ul class="dropdown-menu">
+                        <li><a href="javascript:void(0);" onclick="$('#rolelabel').html('角色代码');$('#roleinput').attr('name','roleCode');">角色代码</a></li>
+                        <li><a href="javascript:void(0);" onclick="$('#rolelabel').html('角色名称');$('#roleinput').attr('name','roleName');">角色名称</a></li>
+                      </ul>
+                    </div>
+                    <input id="roleinput" name="roleCode" type="text" class="form-control">
+                     <input type="text" style="display: none;"/>
+                    <span class="input-group-btn"><button type="button" class="btn btn-default" onclick="queryRole();">
+                     <i class="fa fa-search"></i></button></span>
+                  </div>
+	          </form>
+			     <div style="padding-top: 15px;">
+			        <table id="role_2"></table>
+			        <div style="text-align:right;">
+			            <div id="role_paginator_2"></div>
+			        </div>
+			       </div>
+		         </div>
+		        </div>
+			   </div>
+			<div class="col-md-6">
+			     <div class="box box-primary">
+		        <div class="box-header with-border">
+		          <h3 class="box-title">用户列表</h3>
+		        </div>
+		        <div class="box-body">
+		        <div class="input-group">
+                    <div class="input-group-btn">
+                      <button type="button" class="btn btn-primary">当前角色</button>
+                    </div>
+                    <input type="text" class="form-control" id="crole" readonly="readonly">
+                  </div>
+			     <div style="padding-top: 15px;">
+			        <table id="user_2"></table>
+			        <div style="text-align:right;">
+			            <div id="user_paginator_2"></div>
+			        </div>
+			       </div>
+		        </div>
+		        </div>
+			   </div>
+			   <div class="col-md-12">
+			     <div class="form-group">
+		            <button id="insertbt2" type="button" data-loading-text="处理中" class="btn btn-primary" onclick="insert1();">提交</button>
+		            <button type="button" class="btn btn-primary" onclick="loadContext('page/sys/authuser/authuser.html')">返回</button>
+				</div>
+	        </div>
+		    </div>
+	    </div>
+      </div>
+      </div>
+</section>
+<script type="text/javascript">
+   $.AdminLTE.boxWidget.activate();
+	var options1 = {
+	        height: '300',
+	        indexColWidth: 35,
+	        cols: [{ name:'guid', hidden:true},
+	               { title:'登录名', name:'loginId', width: 200, align: 'center'},
+	               { title:'真实姓名', name:'name' ,width:230, align:'center'}],
+	        url:'./dispatcherAction/queryByMMGrid.do?service=userService&method=queryByPage',
+	        method: 'post',
+	        root: 'items',
+	        nowrap:true,
+	        indexCol: true,
+	        plugins : [$('#user_paginator_1').mmPaginator()]
+	    };
+	var options2 = {
+			indexCol: true,
+	        height: '300',
+	        indexColWidth: 35,
+	        cols: [{ name:'guid', hidden:true},
+	               { title:'角色编号', name:'roleCode', width: 200, align: 'center'},
+	               { title:'角色名称', name:'roleName' ,width:230, align:'center'}],
+	        url:'./dispatcherAction/queryByMMGrid.do?service=authuserService&method=queryNotInRole',
+	        method: 'post',
+	        root: 'items',
+	        nowrap:true,
+	        checkCol:true,
+	        multiSelect:true,
+	        plugins : [$('#role_paginator_1').mmPaginator()]
+	    };
+	var options3 = {
+			indexCol: true,
+	        height: '300',
+	        indexColWidth: 35,
+	        cols: [{ name:'guid', hidden:true},
+	               { title:'角色编号', name:'roleCode', width: 200, align: 'center'},
+	               { title:'角色名称', name:'roleName' ,width:230, align:'center'}],
+	   	    url:'./dispatcherAction/queryByMMGrid.do?service=roleService&method=queryByPage',
+	        method: 'post',
+	        root: 'items',
+	        nowrap:true,
+	        plugins : [$('#role_paginator_2').mmPaginator()]
+	    };
+	var options4 = {
+			indexCol: true,
+	        height: '300',
+	        indexColWidth: 35,
+	        cols: [{ name:'guid', hidden:true},
+	               { title:'登录名', name:'loginId', width: 200, align: 'center'},
+	               { title:'真实姓名', name:'name' ,width:230, align:'center'}],
+	   	   	url:'./dispatcherAction/queryByMMGrid.do?service=authuserService&method=queryNotInUser',
+	        method: 'post',
+	        root: 'items',
+	        nowrap:true,
+	        checkCol:true,
+	        multiSelect:true,
+	        plugins : [$('#user_paginator_2').mmPaginator()]
+	    };
+   var mmgrid1;
+   var mmgrid2;
+   var mmgrid3;
+   var mmgrid4;
+ 
+	/**
+	 * 加载表格
+	 */
+	function loadMMGrid(){
+		mmgrid1 =  $('#user_1').mmGrid(options1);
+		mmgrid2 =  $('#role_1').mmGrid(options2);
+		mmgrid3 =  $('#role_2').mmGrid(options3);
+		mmgrid4 =  $('#user_2').mmGrid(options4);
+		mmgrid1.on("cellSelected",function(e, item, rowIndex, colIndex){
+			  $("#cuser").val(item.loginId);
+			  mmgrid2.load({"loginId":item.loginId});
+	    });
+		mmgrid3.on("cellSelected",function(e, item, rowIndex, colIndex){
+			  $("#crole").val(item.roleCode);
+			  mmgrid4.load({"roleCode":item.roleCode});
+	    });
+	}
+	
+	var Add_Callback = function(){
+   		this.onSuccess=function(data){
+   			try {
+   				var j_obj = data;
+   				if (j_obj.success) {
+   					if($("button[data-loading-text]")){
+   	   					$("button[data-loading-text]").button('reset');
+   	   				}
+   					loadContext("ui/page/system/authuser/authuser.html");
+   				}else{
+   					showDialog($("#addContent"),"","操作失败!","danger");
+   				}
+   			} catch (e) {
+   				alert("异常!")
+   			}
+   		};
+   		this.onFail = function(jqXHR, textStatus, errorThrown){
+   			showDialog($("#addContent"),"","操作失败!","danger");
+   		};
+	   };
+    //用户授角色	
+	function insert1(){
+		 if(mmgrid1 != null || mmgrid2 != null){
+			  if(mmgrid1.selectedRows().length == 0){
+				showDialog($("#addContent"),"警告信息","请选择用户！","warning");
+				return;
+			  }
+			  if(mmgrid2.selectedRows().length == 0){
+				 showDialog($("#addContent"),"警告信息","最少指定一个角色！","warning");
+				 return;
+			  }
+			  var roleGuids = [];
+			  $.each(mmgrid2.selectedRows(),function(index,item){
+				  roleGuids.push({guid:item.guid,roleCode:item.roleCode});
+			  });
+			  $("#insertbt1").button("loading");
+			  var rainbow = new Rainbow();
+			  rainbow.setRows(roleGuids);
+			  rainbow.set('userGuid',mmgrid1.selectedRows()[0].guid);
+			  rainbow.set('userCode', mmgrid1.selectedRows()[0].loginId);
+			  rainbow.setService("authuserService");
+		      rainbow.setMethod("insertByUser");
+		      rainbowAjax.excute(rainbow, new Add_Callback()); 
+		 }
+	}
+    
+	//角色授用户
+	function insert2(){
+		if(mmgrid3 != null || mmgrid4 != null){
+			  if(mmgrid3.selectedRows().length == 0){
+				showDialog($("#addContent"),"警告信息","请选择角色！","warning");
+				return;
+			  }
+			  if(mmgrid4.selectedRows().length == 0){
+				 showDialog($("#addContent"),"警告信息","最少指定一个用户！","warning");
+				 return;
+			  }
+			  var userGuids = [];
+			  $.each(mmgrid4.selectedRows(),function(index,item){
+				  userGuids.push({guid:item.guid,loginId:item.loginId});
+			  });
+			  $("#insertbt2").button("loading");
+			  var rainbow = new Rainbow();
+			  rainbow.setRows(userGuids);
+			  rainbow.set('roleGuid',mmgrid3.selectedRows()[0].guid);
+			  rainbow.set('roleCode', mmgrid3.selectedRows()[0].roleCode);
+			  rainbow.setService("authuserService");
+		      rainbow.setMethod("insertByRole");
+		      rainbowAjax.excute(rainbow, new Add_Callback()); 
+		 }
+	}
+	
+	
+	$(document).ready(function() {
+		//activateWidget();// 显式激活widget控件
+		loadMMGrid();// 加载表格控件
+	});
+
+	
+	function queryUser(){
+		mmgrid1.load(serializeObject($("#queryForm1"),false));
+	}
+	
+	function queryRole(){
+		mmgrid3.load(serializeObject($("#queryForm2"),false));
+	}
+</script>

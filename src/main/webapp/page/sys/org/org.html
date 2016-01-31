@@ -1,0 +1,203 @@
+<section class="content-header">
+  <h1>
+               机构管理
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i>系统元数据管理</a></li>
+    <li><a href="#"><i class="fa fa-table"></i>基础管理</a></li>
+    <li class="active">机构管理</li>
+  </ol>
+</section>
+<section id="addContent" class="content">
+	  <div class="row">
+	     <div class="col-md-4">
+	      <div class="box box-primary">
+	        <div class="box-header with-border">
+	          <h3 class="box-title">机构列表</h3>
+	          <div class="box-tools pull-right">
+	             <button id="abc" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+	          </div>
+	        </div>
+	        <div class="box-header">
+	          <button class="btn btn-primary" onclick="insert();">新增机构</button>
+	          <button id="rmbt" class="btn btn-primary" onclick="del();" data-loading-text="处理中">删除机构</button>
+	        </div>
+	        <div class="box-body" style="min-height: 365px;">
+	          <div class="row">
+	            <div id="orgTree" class="ztree">
+	            </div>
+	          </div> 
+	        </div>
+	   </div>
+	 </div>
+	   <div class="col-md-8">
+	      <div class="box box-primary">
+	        <div class="box-header with-border">
+	          <h3 class="box-title">机构信息</h3>
+	          <div class="box-tools pull-right">
+	             <button id="abc" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+	          </div>
+	        </div>
+	        <div class="box-body" style="min-height: 350px;">
+	          <div class="row">
+	               <form action="" id="addForm" name="addForm">
+	               <div class="col-xs-12">
+               	   <div class="form-group">
+						<input type=hidden id="guid" name="guid" /> 
+						<label for="orgName" class="col-sm-3 control-label">机构名称:</label> 
+						<input id="orgName" type="text" name="orgName" class="form-horizontal" style="width:250px;height: 34px;" class="form-control" validateType="lengthRange-1-20" placeholder="机构名称">
+					</div>
+					<div class="form-group">
+						<label for="orgCode" class="col-sm-3 control-label">机构代码:</label> 
+						<input id="orgCode" type="text" name="orgCode" class="form-horizontal" style="width:250px;height: 34px;" placeholder="机构代码" validateType="lengthRange-1-100">
+					</div>
+					<div class="form-group">
+						<label for="parentCode" class="col-sm-3 control-label">上级代码:</label>
+						 <input id="parentCode" name="parentCode" class="form-horizontal" style="width:250px;height: 34px;"  validateType="lengthRange-0-100" placeholder="上级代码"/>
+					</div>
+					<div class="form-group">
+						<label for="level" class="col-sm-3 control-label">机构层级:</label> 
+						<input id="level" type="text" treeselector="radio" realVal name="level"class="form-horizontal" style="width:250px;height: 34px;" placeholder="机构层级" validateType="lengthRange-0-1000">
+					</div>
+					<div class="form-group">
+						<label for="state" class="col-sm-3 control-label">节点状态:</label> 
+						<input id="state" name="state" type="text" class="form-horizontal" style="width:250px;height: 34px;" placeholder="节点状态" validateType="lengthRange-1-20">
+					</div>
+					<div class="form-group">
+						<label for="aliveFlag" class="col-sm-3 control-label">是否有效:</label> 
+						<input type="radio" name="aliveFlag" value="0"> 无效 
+						<input type="radio" name="aliveFlag" value="1"> 有效
+					</div>
+	             </div>
+	               </form>
+	          </div> 
+	        </div>
+	         <div class="box-footer">
+	        <div class="form-group">
+			   <button id="savebt" class="btn btn-primary" onclick="save();" data-loading-text="处理中">保存</button>
+			</div>
+	     </div>
+	   </div>
+	 </div>
+ </div>
+</section>
+<script type="text/javascript">
+$.AdminLTE.boxWidget.activate();
+var cNode;
+function loadMenuTree() {
+	var rainbow = new Rainbow();
+	rainbow.setService("orgService");
+	rainbow.setMethod("queryGridTreeNew");
+	rainbowAjax.query(rainbow, new function(){
+		this.onSuccess = function(data) {
+			var setting = {
+			    data : {simpleData : {enable : true}},
+			    callback:{onClick: function(event, treeId, treeNode) {
+			    	cNode = treeNode;
+			    	$.each(data.rows,function(index,item){
+			    		if(item.id == treeNode.id){
+			    		  $("input[name='guid']").val(item.guid);
+			    		  $("input[name='orgName']").val(item.orgName);
+			    		  $("input[name='orgCode']").val(item.orgCode);
+		    			  $("input[name='parentCode']").val(item.parentCode);
+		    			  $("input[name='level']").val(item.level);
+		    			  $("input[name='state']").val(item.state);
+		    			  $.each($("input[name='aliveFlag']"),function(index,item2){
+		    				 if($(this).val() == item.aliveFlag){
+		    					 $(this).attr("checked","checked");
+		    				 }
+		    			  });
+					      return;
+			    		}
+			    	});
+				}}};
+			var zNodes = [];
+            for(var i=0;i< data.rows.length;i++){
+            	var item = data.rows[i];
+            	item.id = data.rows[i].orgCode
+        		item.pId = data.rows[i].parentCode;
+        		item.name = data.rows[i].orgName;
+        		item.url ="";
+        		zNodes.push(item);
+            }
+			$.fn.zTree.init($("#orgTree"), setting,zNodes);
+		    ztree = $.fn.zTree.getZTreeObj("orgTree");
+		    ztree.expandAll(true);
+		};
+		this.onFail = function(jqXHR, textStatus, errorThrown) {
+		};
+	});
+}
+
+function insert(){
+  $("input[name='guid']").val("");
+  $("input[name='orgName']").val("");
+  $("input[name='orgCode']").val("");
+  $("input[name='level']").val("");
+  $("input[name='state']").val("");
+  $.each($("input[name='aliveFlag']"),function(index,item){
+	  $(this).removeAttr("checked");
+  });
+  $("input[name='parentCode']").val(cNode.id);
+}
+
+var Oper_Callback = function() {
+	this.onSuccess = function(data) {
+		try {
+			var j_obj = data;
+			if (j_obj.success) {
+				showDialog($("#addContent"), "提示信息", "操作成功!", "success");
+				loadMenuTree();//加载菜单树
+			} else {
+				showDialog($("#addContent"), "提示信息", "操作失败!", "danger");
+			}
+			if($("button[data-loading-text]")){
+				$("button[data-loading-text]").button('reset');
+			}
+		} catch (e) {
+			alert("异常!")
+		}
+	};
+	this.onFail = function(jqXHR, textStatus, errorThrown) {
+		showDialog($("#addContent"), "提示信息", "操作失败!", "danger");
+	};
+};
+
+function save(){
+	$("#savebt").button("loading");
+	var rainbow = new Rainbow();
+	var guid = $("input[name='guid']").val();
+	rainbow.setAttr(serializeObject($("#addForm"),true));
+	rainbow.setService("orgService");
+	if(guid != ''){
+		rainbow.set("guid",guid);
+		rainbow.setMethod("update");
+	}else{
+		rainbow.setMethod("insert");
+	}
+	rainbowAjax.excute(rainbow,new Oper_Callback());
+}
+
+
+function del(){
+	$("#rmbt").button("loading");
+	var orgCode = $("input[name='orgCode']").val();
+	var guid = $("input[name='guid']").val();
+	if(orgCode != '' && guid != ''){
+		if(confirm("你确定删除这条记录吗?")){
+		var rainbow = new Rainbow();
+			rainbow.addRows({"orgCode":orgCode,"guid":guid});
+			rainbow.setService("orgService");
+			rainbow.setMethod("delete");
+			rainbowAjax.excute(rainbow,new Oper_Callback());
+		}
+	}else{
+		showDialog($("#addContent"), "提示信息", "请选择要删除的节点", "danger");
+	}
+}
+
+$(document).ready(function() {
+	//activateWidget();//显式激活widget控件
+	loadMenuTree();//加载菜单树
+});
+</script>

@@ -1,0 +1,6 @@
+BuildTime  20160131-2139
+GitVersion   null
+MavenVersion 1.0-SNAPSHOT
+GitUrl https://github.com/accphuangxin/rainbow-Web.git
+MyCatSite @mycatsite@
+QQGroup @qqgroup@

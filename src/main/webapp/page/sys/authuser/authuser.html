@@ -1,0 +1,156 @@
+<section class="content-header">
+  <h1>
+                   用户授权管理
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i>系统元数据管理</a></li>
+    <li><a href="#"><i class="fa fa-table"></i>资源授权</a></li>
+    <li class="active">用户授权中心</li>
+  </ol>
+</section>
+<section id="querycontent" class="content">
+  <div class="row">
+	 <div class="col-md-12">
+	    <div class="box box-primary">
+	        <div class="box-header with-border">
+	          <h3 class="box-title">查询条件</h3>
+	           <div class="box-tools pull-right">
+                  <button id="abc" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+               </div>
+	        </div>
+	        <div class="box-body">
+	        <form id="queryForm" name="queryForm">
+		        <div class="row">
+		             <div class="col-xs-3">
+			             <div class="form-group">
+		                     <label for="name">登录名称:</label>
+			                 <input id="userCode" name="userCode" type="text" class="form-control" placeholder="登录名称">
+		                  </div>
+		             </div>
+		             <div class="col-xs-3">
+			             <div class="form-group">
+		                     <label for="name">角色名称:</label>
+			                 <input id="roleCode" name="roleCode" type="text" class="form-control" placeholder="角色名称">
+		                  </div>
+		             </div>
+	            </div>
+	        </form>
+	     </div>
+	     <div class="box-footer">
+	       <div class="form-group">
+				<div class="col-lg-offset-5 col-lg-2">
+			       <button type="button" class="btn btn-primary" onclick="javascript:search();">查询</button>
+	               <button type="button" class="btn btn-primary" onclick="document.forms['queryForm'].reset();">重置</button>
+				</div>
+			</div>
+	     </div>
+	   </div>
+	 </div>
+	 <div class="col-md-12">
+	      <div class="box box-primary">
+	        <div class="box-header with-border">
+	          <h3 class="box-title">查询结果</h3>
+	          <div class="box-tools pull-right">
+                  <button id="abc" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+               </div>
+	        </div>
+	         <div class="box-header">
+			   <button class="btn btn-primary" onclick="loadContext('page/sys/authuser/authuser_add.html')">新增授权</button>
+	           <button class="btn btn-primary" onclick="javascript:del();">批量删除</button>
+			</div>
+	        <div class="box-body">
+	          <div>
+		        <table id="table"></table>
+		        <div style="text-align:right;">
+		            <div id="paginator"></div>
+		        </div>
+			  </div>
+	        </div>
+	   </div>
+	 </div>
+ </div>
+ <script type="text/javascript">
+   $.AdminLTE.boxWidget.activate();
+</script>
+</section>
+<script type="text/javascript">
+$(document).ready(function() {
+	loadMMGrid(); //加载MMGrid  
+});
+/**
+ * 加载mmgrid
+ */
+function loadMMGrid(){
+    var cols = [
+        { name:'guid', hidden:true},
+        { title:'用户登录号 ',name:'userCode', width: 200, align: 'center' },
+        { title:'角色代码 ', name:'roleCode', width: 200, align: 'center'},
+        { title:'角色名称', name:'roleName' ,width:200, align:'center'},
+        { title:'创建人', name:'createUser' ,width:200, align:'center'},
+        { title:'创建时间', name:'createTime' ,width:200, align:'center'}
+    ];
+    mmGrid =  $('#table').mmGrid({
+        indexCol: true,
+        height: '400',
+        indexColWidth: 35,
+        cols: cols,
+        url: './dispatcherAction/queryByMMGrid.do?service=authuserService&method=queryByPage',
+        method: 'post',
+        root: 'items',
+        nowrap:true,
+        checkCol:true,
+        multiSelect:true,
+        plugins : [
+            $('#paginator').mmPaginator()
+        ]
+    });
+}
+
+/**
+ * 查询
+ */
+function search(){
+	if(mmGrid != null){
+		mmGrid.load(serializeObject($("#queryForm"),false));
+	}
+}
+
+var Delete_Callback = function(){
+		this.onSuccess=function(data){
+			try {
+				var j_obj = data;
+				if (j_obj.success) {
+					mmGrid.load(serializeObject($("#queryForm"),false));
+				}else{
+					showDialog($("#addContent"),"","操作失败!","danger");
+				}
+			} catch (e) {
+				alert("异常!")
+			}
+		};
+		this.onFail = function(jqXHR, textStatus, errorThrown){
+			showDialog($("#addContent"),"","操作失败!","danger");
+		};
+   };
+
+/**
+ * 删除
+ */
+function del(){
+	if(confirm("你确定删除这条记录吗?")){
+	if(mmGrid != null){
+		if(mmGrid.selectedRows().length == 0){
+			showDialog($("#querycontent"),"警告信息","请选择要删除的数据.","warning");
+		}else{
+			var rainbow = new Rainbow();
+			$.each(mmGrid.selectedRows(),function(index,item){
+				rainbow.addRows({"guid":item.guid});
+			});
+			rainbow.setService("authuserService");
+			rainbow.setMethod("delete");
+			rainbowAjax.excute(rainbow,new Delete_Callback());
+		}
+	}
+	}
+}
+</script>

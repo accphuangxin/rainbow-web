@@ -1,0 +1,187 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+                    页面管理
+  </h1>
+  <ol class="breadcrumb">
+  	<li><a href="#"><i class="fa fa-dashboard"></i>系统元数据管理</a></li>
+    <li><a href="#"><i class="fa fa-table"></i>资源管理</a></li>
+    <li class="active">页面管理</li>
+  </ol>
+</section>
+<!-- Main content -->
+<section id="container" class="content">
+  <div class="row">
+	 <div class="col-md-12">
+	      <div class="box box-primary">
+	       <div class="box-header with-border">
+	          <h3 class="box-title">查询条件</h3>
+	          <div class="box-tools pull-right">
+                  <button id="abc" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+               </div>
+	        </div>
+	        <div class="box-body">
+	        <form action="" id="query_Form">
+	        <div class="row">
+	        
+	         	<div class="col-xs-3">
+	                  <div class="form-group">
+	                      <label for="name">页面名称:</label>
+		                     <input   type="text" name="name" class="form-control" placeholder="名称">
+	                  </div>
+	             </div>
+	             <div class="col-xs-3">
+	                 <div class="form-group">
+	                      <label>代码 :</label>
+		                  <input   name="code" type="text" class="form-control" placeholder="代码">
+	                  </div>
+	             </div>
+            </div>
+            </form>
+	     </div>
+	     <div class="box-footer">
+	       <div class="form-group">
+				<div class="col-lg-offset-5 col-lg-2">
+			       <button class="btn btn-primary"  onclick="queryForm('query_Form')">查询</button>
+	                <button class="btn btn-primary" onclick="resetBtn('query_Form')">重置</button>
+				</div>
+			</div>
+	     </div>
+	   </div>
+	 </div>
+	 <div class="col-md-12">
+	      <div class="box box-primary">
+	        <div class="box-header with-border">
+	          <h3 class="box-title">查询结果</h3>
+	        </div>
+	        <div class="box-header">
+	        	<button class="btn btn-success" onclick="loadContext('page/sys/page/page_add.html')">新增</button> <button class="btn bg-purple" onclick="loadContext('page/sys/page/page_add.html','true')">复制新增</button>
+	     	</div>
+	        <div class="box-body">
+	          <div>
+		        <table id="table"></table>
+		        <div style="text-align:right;">
+		            <div id="paginator"></div>
+		        </div>
+			  </div>
+	        </div>
+	        <div class="box-footer">
+	       <div class="form-group">
+				<button class="btn btn-success" onclick="loadContext('page/sys/page/page_add.html')">新增</button> <button class="btn bg-purple" onclick="loadContext('page/sys/page/page_add.html','true')">复制新增</button>
+			</div>
+	     </div>
+	   </div>
+	 </div>
+ </div>
+ 
+  <!-- 淇敼 -->
+<div class="modal fade" id="showInfo" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" 
+               data-dismiss="modal" aria-hidden="true">
+                  &times;
+            </button>
+            <h4 class="modal-title" id="myModalLabel">
+               修改页面
+            </h4>
+         </div>
+         <div class="modal-body">
+			
+			<!-- modify 椤甸潰寮� -->
+			<form action="" id="modify_form">
+			
+			<div class="row">
+	             <div class="col-xs-6">
+	             <!-- 表单内容 -->
+		             <div class="form-group">
+		              <input type=hidden id="guid" name="guid"  />
+	                     <label for="name">名称:</label>
+		                  <input id="name" type="text" name="name" class="form-control"  validateType = "lengthRange-1-20"  placeholder="名称">
+	                  </div>
+	                  <div class="form-group">
+	                     <label for="code">代码:</label>
+		                  <input id="code" type="text" name="code" class="form-control" placeholder="代码" validateType="lengthRange-1-100">
+	                  </div>
+	                  <div class="form-group">
+	                     <label for="url">页面路径:</label>
+		                  <input id="url" type="text" name="url" class="form-control" placeholder="页面路径" validateType="lengthRange-1-100">
+	                  </div>
+	                 <div class="form-group">
+						<label>是否缓存:</label>	                  
+	                     <label for="isCache1"><input id="isCache1" type="radio" name="isCache"   value="1"> 是 </label>
+	                     <label for="isCache0"><input id="isCache0" type="radio" name="isCache"  value="0" checked> 否 </label>
+	                  </div>
+				<!-- 表单内容 -->	                  
+	             </div>
+	            </div> 
+			</form>
+			<!-- modify 椤甸潰缁撴潫 -->
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-default" 
+               data-dismiss="modal">关闭
+            </button>
+            <button id="modify_btn" onclick="javascript:updateForm('pageService','update','modify_form');" type="button" class="btn btn-primary">
+               	修改
+            </button>
+         </div>
+      </div><!-- /.modal-content -->
+</div><!-- /.modal -->
+</div>
+</section><!-- /.content -->
+
+
+<script type="text/javascript">
+   $.AdminLTE.boxWidget.activate();
+
+$(document).ready(function() {
+		    var cols = [
+			{ title:'操作', name:'operation',width:100, align:'center',renderer:function(val,item,rowIndex){
+					 return '<button  class="btn btn-primary btn-xs modify"  onclick=ready4Update("'+item.guid+'","showInfo")>修改</button>&nbsp;'+
+						'<button class="btn btn-danger btn-xs" onclick=delObj("pageService","delete","'+item.guid+'")>删除</button>&nbsp;'; 
+			}
+			},
+			{ title:'页面名称', name:'name' ,width:200, align:'center',renderer:function(val,item,rowIndex){
+        		if(val)
+        			return '<div style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;width:200px;" data-toggle="tooltip"   data-placement="left" title="'+val+'">'+val+'</div>';
+        		else
+        			return"";
+        	}},
+	        { title:'代码', name:'code', width: 200, align: 'center',renderer:function(val,item,rowIndex){
+        		if(val)
+        			return '<div style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;width:200px;" data-toggle="tooltip"   data-placement="left" title="'+val+'">'+val+'</div>';
+        		else
+        			return "";
+        	}},
+	        { title:'页面路径', name:'url' ,width:300, align:'center' ,renderer:function(val,item,rowIndex){
+        		if(val)
+        			return '<div style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;width:200px;" data-toggle="tooltip"   data-placement="left" title="'+val+'">'+val+'</div>';
+        		else
+        			return "";
+        	}},
+	        { title:'是否缓存', name:'isCache' ,width:100, align:'center' ,renderer:function(val,item,rowIndex){
+        		if(val == '0')
+        			return '否';
+        		else
+        			return "是";
+        	}},
+	        { title:'创建时间', name:'createTime' ,width:150, align:'center'},
+	        { title:'创建者', name:'createUser' ,width:100, align:'center'}
+	    ];
+	 	mmgrid = $('#table').mmGrid({
+	        indexCol: true,
+	        height: '400',
+	        indexColWidth: 35,
+	        cols: cols,
+	        url: './dispatcherAction/queryByMMGrid.do?service=pageService&method=queryByPage',
+	        method: 'post',
+	        root: 'items',
+	        plugins : [
+	          $('#paginator').mmPaginator()
+	        ]
+	    });
+});
+</script>

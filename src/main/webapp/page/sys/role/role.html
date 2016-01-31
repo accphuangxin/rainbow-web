@@ -1,0 +1,194 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+                    角色管理
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i>系统元数据管理</a></li>
+    <li><a href="#"><i class="fa fa-table"></i>基础管理</a></li>
+    <li class="active"> 角色管理</li>
+  </ol>
+</section>
+<!-- Main content -->
+<section id="container" class="content">
+  <div class="row">
+	 <div class="col-md-12">
+	      <div class="box box-primary">
+	       <div class="box-header with-border">
+	          <h3 class="box-title">查询条件</h3>
+	          <div class="box-tools pull-right">
+                  <button id="abc" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+               </div>
+	        </div>
+	        <div class="box-body">
+	        <form action="" id="query_Form">
+	        <div class="row">
+	        
+	         	<div class="col-xs-3">
+	                  <div class="form-group">
+	                      <label for="roleName">角色名称:</label>
+		                     <input   type="text" name="roleName" class="form-control" placeholder="角色名称">
+	                  </div>
+	             </div>
+	            <!--  <div class="col-xs-3">
+		             <div class="form-group">
+	                     <label for="depart">所属组织:</label>
+		               <input id="depart" name="org" type="text" class="form-control" placeholder="所属组织">
+	                  </div>
+	             </div> -->
+	             <div class="col-xs-3">
+	                 <div class="form-group">
+	                      <label>角色代码 :</label>
+		                  <input   name="roleCode" type="text" class="form-control" placeholder="角色代码">
+	                  </div>
+	             </div>
+            </div>
+            </form>
+	     </div>
+	     <div class="box-footer">
+	       <div class="form-group">
+				<div class="col-lg-offset-5 col-lg-2">
+			       <button class="btn btn-primary"  onclick="queryForm('query_Form')">查询</button>
+	                <button class="btn btn-primary" onclick="resetBtn('query_Form')">重置</button>
+				</div>
+			</div>
+	     </div>
+	   </div>
+	 </div>
+	 <div class="col-md-12">
+	      <div class="box box-primary">
+	        <div class="box-header with-border">
+	          <h3 class="box-title">查询结果</h3>
+	        </div>
+	        <div class="box-header">
+				<button class="btn btn-success" onclick="loadContext('page/sys/role/role_add.html')">新增</button> <button class="btn bg-purple" onclick="loadContext('page/sys/role/role_add.html','true')">复制新增</button>
+	     	</div>
+	        <div class="box-body">
+	          <div>
+		        <table id="table"></table>
+		        <div style="text-align:right;">
+		            <div id="paginator"></div>
+		        </div>
+			  </div>
+	        </div>
+	        <div class="box-footer">
+	       <div class="form-group">
+				<button class="btn btn-success" onclick="loadContext('page/sys/role/role_add.html')">新增</button> <button class="btn bg-purple" onclick="loadContext('page/sys/role/role_add.html','true')">复制新增</button>
+			</div>
+	     </div>
+	   </div>
+	 </div>
+ </div>
+ 
+  <!-- 淇敼 -->
+<div class="modal fade" id="showInfo" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" 
+               data-dismiss="modal" aria-hidden="true">
+                  &times;
+            </button>
+            <h4 class="modal-title" id="myModalLabel">
+               修改页面
+            </h4>
+         </div>
+         <div class="modal-body">
+			
+			<!-- modify 椤甸潰寮� -->
+			<form action="" id="modify_form">
+			
+			<div class="row">
+	             <div class="col-xs-6">
+	             <!-- 表单内容 -->
+		              	 <input type=hidden id="guid" name="guid"  />
+					  <div class="form-group">
+	                     <label for="roleName">角色名称:</label>
+		                  <input id="roleName" type="text" name="roleName" class="form-control" placeholder="角色名称" validateType="lengthRange-1-100">
+	                  </div>
+				<!-- 表单内容 -->	                  
+	             </div>
+	            </div> 
+			</form>
+			<!-- modify 椤甸潰缁撴潫 -->
+			
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-default" 
+               data-dismiss="modal">关闭
+            </button>
+            <button id="modify_btn" onclick="javascript:updateForm('roleService','update','modify_form');" type="button" class="btn btn-primary">
+               	修改
+            </button>
+         </div>
+      </div><!-- /.modal-content -->
+</div><!-- /.modal -->
+</div>
+</section><!-- /.content -->
+
+
+<script type="text/javascript">
+   $.AdminLTE.boxWidget.activate();
+</script>
+
+<script type="text/javascript">
+
+function ready4Update_extra_item_beforeCall(modifyForm_obj, row, attr_){
+	if(modifyForm_obj.find("#"+attr_).attr("treeselector")){
+		  modifyForm_obj.find("[name='"+attr_+"']").attr("realVal",''+row[attr_]);
+		  modifyForm_obj.find("[name='"+attr_+"_hidden']").val(row[attr_]);
+		  modifyForm_obj.find("#"+attr_).val(row[attr_]);
+		  modifyForm_obj.find("#"+attr_).attr("realVal",''+row[attr_]);
+	  }
+}
+$(document).ready(function() {
+		    var cols = [
+			{ title:'操作', name:'operation',width:100, align:'center',renderer:function(val,item,rowIndex){
+					 return '<button  class="btn btn-primary btn-xs modify"  onclick=ready4Update("'+item.guid+'","showInfo","ready4Update_extra_item_beforeCall")>修改</button>&nbsp;'+
+						'<button class="btn btn-danger btn-xs" onclick=delObj("roleService","delete","'+item.guid+'")>删除</button>&nbsp;'; 
+			}
+			},
+			{ title:'角色代码', name:'roleCode' ,width:200, align:'center',renderer:function(val,item,rowIndex){
+        		if(val)
+        			return '<div style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;width:200px;" data-toggle="tooltip"   data-placement="left" title="'+val+'">'+val+'</div>';
+        		else
+        			return"";
+        	}},
+	        { title:'角色名称', name:'roleName', width: 200, align: 'center',renderer:function(val,item,rowIndex){
+        		if(val)
+        			return '<div style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;width:200px;" data-toggle="tooltip"   data-placement="left" title="'+val+'">'+val+'</div>';
+        		else
+        			return"";
+        	}},
+	        { title:'角色类型代码', name:'roleTypeCode' ,width:200, align:'center' ,renderer:function(val,item,rowIndex){
+        		if(val)
+        			return '<div style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;width:200px;" data-toggle="tooltip"   data-placement="left" title="'+val+'">'+val+'</div>';
+        		else
+        			return"";
+        	}},
+	        { title:'机构代码', name:'orgCode' ,width:200, align:'center' ,renderer:function(val,item,rowIndex){
+        		if(val)
+        			return '<div style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;width:200px;" data-toggle="tooltip"   data-placement="left" title="'+val+'">'+val+'</div>';
+        		else
+        			return"";
+        	}},
+	        { title:'创建时间', name:'createTime' ,width:150, align:'center'},
+	        { title:'创建者', name:'createUser' ,width:100, align:'center'}
+	    ];
+	  mmgrid = $('#table').mmGrid({
+	        indexCol: true,
+	        height: '400',
+	        indexColWidth: 35,
+	        cols: cols,
+	        url: './dispatcherAction/queryByMMGrid.do?service=roleService&method=queryByPage',
+	        method: 'post',
+	        root: 'items',
+	        plugins : [
+	          $('#paginator').mmPaginator()
+	        ]
+	    });
+});
+
+
+</script>

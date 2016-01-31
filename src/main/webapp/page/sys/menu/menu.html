@@ -1,0 +1,211 @@
+<section class="content-header">
+  <h1>
+               菜单管理
+  </h1>
+  <ol class="breadcrumb">
+  	<li><a href="#"><i class="fa fa-dashboard"></i>系统元数据管理</a></li>
+    <li><a href="#"><i class="fa fa-table"></i>资源管理</a></li>
+    <li class="active">菜单管理</li>
+  </ol>
+</section>
+<section id="addContent" class="content">
+	  <div class="row">
+	     <div class="col-md-4">
+	      <div class="box box-primary">
+	        <div class="box-header with-border">
+	          <h3 class="box-title">菜单列表</h3>
+	          <div class="box-tools pull-right">
+	             <button id="abc" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+	          </div>
+	        </div>
+	        <div class="box-header">
+	          <button class="btn btn-primary" onclick="insert();">新增菜单</button>
+	          <button class="btn btn-primary" onclick="del();">删除菜单</button>
+	        </div>
+	        <div class="box-body" style="min-height:430px;">
+	          <div class="row">
+	            <div id="menuTree" class="ztree">
+	            </div>
+	          </div> 
+	        </div>
+	   </div>
+	 </div>
+	   <div class="col-md-8">
+	      <div class="box box-primary">
+	        <div class="box-header with-border">
+	          <h3 class="box-title">菜单信息</h3>
+	          <div class="box-tools pull-right">
+	             <button id="abc" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+	          </div>
+	        </div>
+	        <div class="box-body">
+	          <div class="row">
+	                <div class="col-xs-12">
+	                <form action="" id="addForm">
+		             <div class="form-group">
+		                  <input type=hidden id="guid" name="guid"  />
+	                      <label for="name" class="col-sm-3 control-label">名称:</label>
+		                  <input type="text" name="name" class="form-horizontal" style="width:250px;height: 34px;"  validateType = "lengthRange-1-20"  placeholder="名称">
+	                  </div>
+	                  <div class="form-group">
+	                     <label for="code" class="col-sm-3 control-label">代码(不可修改):</label>
+		                 <input type="text" name="code" class="form-horizontal" style="width:250px;height: 34px;" placeholder="代码" validateType="lengthRange-1-100" readonly="readonly">
+	                  </div>
+	                  <div class="form-group">
+	                     <label for="parentCode" class="col-sm-3 control-label">上级代码:</label>
+		                  <input type="text" name="parentCode"  class="form-horizontal" style="width:250px;height: 34px;" realVal Valplaceholder="上级代码" validateType="lengthRange-0-100">
+	                  </div>
+	                  <div class="form-group">
+	                     <label for="pageCode" class="col-sm-3 control-label">页面号:</label>
+		                  <select id="pageCode" name="pageCode" class="form-horizontal" style="width:250px;height: 34px;">
+		                    <option value=""></option>
+		                  </select>
+	                  </div>
+	                  <div class="form-group">
+	                     <label for="sortIndex" class="col-sm-3 control-label">排序:</label>
+		                 <input  name="sortIndex" type="text" class="form-horizontal" style="width:250px;height: 34px;" placeholder="排序" validateType="beDigits">
+	                  </div>
+	                    <div class="form-group">
+	                     <label for="state" class="col-sm-3 control-label">节点状态:</label>
+	                     <select  name="state" class="form-horizontal" style="width:250px;height: 34px;">
+	                     	<option value="folder">--父节点--</option>
+	                     	<option value="item">--叶节点--</option>
+	                     </select>
+	                  </div>
+	                   <div class="form-group">
+	                      <label for="remark"  class="col-sm-3 control-label">描述:</label>
+		                  <input  name="remark" type="text" class="form-horizontal" style="width:250px;height: 34px;" placeholder="描述" validateType="lengthRange-0-1000">
+	                  </div>
+	                  </form>
+	             </div>
+	          </div> 
+	        </div>
+	        <div class="box-footer">
+	        <div class="form-group">
+			   <button class="btn btn-primary" onclick="save();">保存</button>
+			</div>
+	     </div>
+	   </div>
+	 </div>
+ </div>
+</section>
+<script type="text/javascript">
+$.AdminLTE.boxWidget.activate();
+var zNode;
+function loadMenuTree() {
+	var rainbow = new Rainbow();
+	rainbow.setService("menuService");
+	rainbow.setMethod("queryMenusNew");
+	rainbowAjax.query(rainbow, new function(){
+		this.onSuccess = function(data) {
+			var setting = {
+			    data : {simpleData : {enable : true}},
+			    callback:{onClick: function(event, treeId, treeNode) {
+			    	zNode = treeNode;
+			    	$.each(data.rows,function(index,item){
+			    		if(item.id == treeNode.id){
+			    		  $("input[name='guid']").val(item.guid);
+			    		  $("input[name='name']").val(item.text);
+			    		  $("input[name='code']").val(item.id);
+		    			  $("input[name='parentCode']").val(item.parentCode);
+		    			  $("select[name='pageCode']").val(item.pageCode);
+		    			  $("input[name='sortIndex']").val(item.sortIndex);
+		    			  $("select[name='state']").val(item.state);
+		    			  $("input[name='status']").val(item.status);
+		    			  $("input[name='remark']").val(item.remark);
+					      return;
+			    		}
+			    	});
+				}}};
+			var zNodes = [];
+            for(var i=0;i< data.rows.length;i++){
+            	var item = data.rows[i];
+        		item.pId = data.rows[i].parentCode;
+        		item.name = data.rows[i].text;
+        		item.url ="";
+        		zNodes.push(item);
+            }
+			$.fn.zTree.init($("#menuTree"), setting,zNodes);
+		    ztree = $.fn.zTree.getZTreeObj("menuTree");
+		    ztree.expandAll(true);
+		};
+		this.onFail = function(jqXHR, textStatus, errorThrown) {
+		};
+	});
+}
+
+function insert(){
+  $("input[name='guid']").val("");
+  $("input[name='name']").val("");
+  $("input[name='code']").val("");
+  $("input[name='code']").removeAttr("readonly");
+  $("input[name='parentCode']").val(zNode.id);
+  $("select[name='pageCode']").val("");
+  $("input[name='sortIndex']").val("");
+  $("select[name='state']").val("");
+  $("input[name='status']").val("");
+  $("input[name='remark']").val("");
+}
+
+var Oper_Callback = function() {
+	this.onSuccess = function(data) {
+		try {
+			var j_obj = data;
+			if (j_obj.success) {
+				showDialog($("#addContent"), "提示信息", "操作成功!", "success");
+				loadMenuTree();//加载菜单树
+			} else {
+				showDialog($("#addContent"), "", "操作失败!", "danger");
+			}
+		} catch (e) {
+			alert("异常!")
+		}
+	};
+	this.onFail = function(jqXHR, textStatus, errorThrown) {
+		showDialog($("#addContent"), "", "操作失败!", "danger");
+	};
+};
+
+function save(){
+	var rainbow = new Rainbow();
+	var guid = $("input[name='guid']").val();
+	rainbow.setAttr(serializeObject($("#addForm"),true));
+	rainbow.setService("menuService");
+	if(guid != ''){
+		rainbow.set("guid",guid);
+		rainbow.setMethod("update");
+	}else{
+		rainbow.setMethod("insert");
+	}
+	rainbowAjax.excute(rainbow,new Oper_Callback());
+}
+
+
+function del(){
+	var code = $("input[name='code']").val();
+	var guid = $("input[name='guid']").val();
+	if(code != '' && guid != ''){
+		if(confirm("你确定删除这条记录吗?")){
+			var rainbow = new Rainbow();
+			rainbow.addRows({"code":code,"guid":guid});
+			rainbow.setService("menuService");
+			rainbow.setMethod("delete");
+			rainbowAjax.excute(rainbow,new Oper_Callback());
+		}
+	}else{
+		showDialog($("#addContent"), "提示信息", "请选择要删除的节点", "danger");
+	}
+}
+
+$(document).ready(function() {
+	//activateWidget();//显式激活widget控件
+	loadMenuTree();//加载菜单树
+    var weaver = new CommonSelectWeaver("pageCode",false);
+    weaver.weave("./dispatcherAction/query.do?service=pageService&method=query",{},function(item){
+	   var option = item;
+	   option.val = item.code;
+	   option.text = item.code+"-"+item.name;
+	   return option;
+      });
+   });
+</script>

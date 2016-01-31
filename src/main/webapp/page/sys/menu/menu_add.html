@@ -1,0 +1,90 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+                       菜单管理
+  </h1>
+  <ol class="breadcrumb">
+  	<li><a href="#"><i class="fa fa-dashboard"></i>系统元数据管理</a></li>
+    <li><a href="#"><i class="fa fa-table"></i>资源管理</a></li>
+    <li class="active">新增菜单</li>
+  </ol>
+</section>
+<!-- Main content -->
+<section id="container" class="content">
+  <div class="row">
+	 <div class="col-md-12">
+	      <div class="box box-primary">
+	        <div class="box-header with-border">
+	          <h3 class="box-title"> 菜单管理</h3>
+	          <div class="box-tools pull-right">
+                  <button id="abc" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+               </div>
+	        </div>
+	        
+	        <form action="" id="add_form">
+		        <div class="box-body">
+		          <div class="row">
+		             <div class="col-xs-6">
+		             <div class="form-group">
+	                     <label for="name">名称:</label>
+		                  <input id="name" type="text" name="name" class="form-control" validateType = "lengthRange-1-20"  placeholder="名称">
+	                  </div>
+	                  <div class="form-group">
+	                     <label for="code">代码(保持唯一):</label>
+		                  <input id="code" type="text" name="code" class="form-control" placeholder="代码" validateType="lengthRange-1-100">
+	                  </div>
+	                  <div class="form-group">
+	                     <label for="parentCode">上级代码:</label>
+		                  <input id="parentCode" type="text" name="parentCode" treeselector class="form-control" placeholder="上级代码" realVal validateType="lengthRange-0-100">
+	                  </div>
+	                  <div class="form-group">
+	                     <label for="pageCode">页面号(页面代码):</label>
+		                  <input id="pageCode" type="text" name="pageCode"  class="form-control" placeholder="页面号" validateType="lengthRange-0-1000">
+	                  </div>
+	                  <div class="form-group">
+	                     <label>状态:</label>
+	                     <label for="status1"><input id="status1" name="status" type="radio"   value="1" placeholder="状态" validateType="lengthRange-1-20" checked> 有效 </label>
+	                     <label for="status0"><input id="status0" name="status" type="radio"   value="0" placeholder="状态" validateType="lengthRange-1-20"> 无效  </label>
+	                  </div>
+	                  
+	                  <div class="form-group">
+	                     <label for="state">节点状态:</label>
+	                     <select name="state" class="form-control">
+	                     	<option value="folder">--父节点--</option>
+	                     	<option value="item">--叶节点--</option>
+	                     </select>
+	                  </div>
+	                   <div class="form-group">
+	                     <label for="sortIndex">排序:</label>
+		                 <input id="sortIndex" name="sortIndex" type="text" class="form-control" placeholder="状态" validateType="beDigits">
+	                  </div>
+	                  
+	                   <div class="form-group">
+	                      <label for="description">描述:</label>
+		                  <textarea id="description" name="description"  class="form-control" placeholder="描述" validateType="lengthRange-0-1000"></textarea>
+	                  </div>
+	                  
+	             </div>
+		            </div> 
+		        </div>
+	        </form>
+	        
+	        
+	        <div class="box-footer">
+	         <div class="form-group">
+	            <button class="btn btn-primary" onclick="addForm('menuService','insert','add_form')">保存</button>
+	            <button class="btn btn-primary" onclick="loadContext('page/sys/menu/menu.html')">返回列表</button>
+			</div>
+	     </div>
+	   </div>
+	 </div>
+ </div>
+</section><!-- /.content -->
+
+<script type="text/javascript">
+   $.AdminLTE.boxWidget.activate();
+   $(document).ready(function(){
+	  	 var treeSelector = new TreeSelectorWeaver("container","treeModal","treeul","parentCode",false);
+	  	 treeSelector.weave('./dispatcherAction/execute.do?service=menuService&method=queryMenusNew',{});
+   });
+</script>

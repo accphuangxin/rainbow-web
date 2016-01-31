@@ -1,0 +1,73 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+                       角色类型管理
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i>系统元数据管理</a></li>
+    <li><a href="#"><i class="fa fa-table"></i>基础管理</a></li>
+    <li class="active"> 新增角色类型</li>
+  </ol>
+</section>
+<!-- Main content -->
+<section id="container" class="content">
+  <div class="row">
+	 <div class="col-md-12">
+	      <div class="box box-primary">
+	        <div class="box-header with-border">
+	          <h3 class="box-title"> 角色类型管理</h3>
+	          <div class="box-tools pull-right">
+                  <button id="abc" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+               </div>
+	        </div>
+	        
+	        <form action="" id="add_form">
+		        <div class="box-body">
+		          <div class="row">
+		             <div class="col-xs-6">
+		             <!-- 表单内容 -->
+		             
+		             <div class="form-group">
+		              <input type=hidden id="guid" name="guid"  />
+	                     <label for="roleTypeCode">角色类型代码:</label>
+		                  <input id="roleTypeCode" type="text" name="roleTypeCode" class="form-control"  validateType = "lengthRange-1-20"  placeholder="角色类型代码">
+	                  </div>
+	                  <div class="form-group">
+	                     <label for="roleTypeName">角色类型名称:</label>
+		                  <input id="roleTypeName" type="text" name="roleTypeName" class="form-control" placeholder="角色类型名称" validateType="lengthRange-1-100">
+	                  </div>
+	                  <div class="form-group">
+	                     <label for="roleTypeGroup">角色类型组名称:</label>
+		                  <input id="roleTypeGroup" type="text" name="roleTypeGroup" class="form-control" placeholder="角色类型组" validateType="lengthRange-1-100">
+	                  </div>
+	                  <div class="form-group">
+	                     <label for="sortIndex">排序:</label>
+		                  <input id="sortIndex" type="text" name="sortIndex" class="form-control" placeholder="排序" validateType="lengthRange-1-10|beDigits">
+	                  </div>
+	                   <div class="form-group">
+	                     <label for="remark">备注:</label>
+		                  <textarea id="remark"  name="remark" class="form-control" placeholder="备注" validateType="lengthRange-0-1000"></textarea>
+	                  </div>
+		             <!-- 表单内容 -->
+	            	 </div>
+		            </div> 
+		        </div>
+	        </form>
+	        
+	        
+	        <div class="box-footer">
+	         <div class="form-group">
+	            <button class="btn btn-primary" onclick="addForm('roletypeService','insert','add_form')">保存</button>
+	            <button class="btn btn-primary" onclick="loadContext('page/sys/roletype/roletype.html')">返回列表</button>
+			</div>
+	     </div>
+	   </div>
+	 </div>
+ </div>
+</section><!-- /.content -->
+<script type="text/javascript">
+   $.AdminLTE.boxWidget.activate();
+   $(document).ready(function(){
+	   	ready4AddForm("ready4Update_extra_call");
+	});
+</script>

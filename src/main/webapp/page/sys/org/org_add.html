@@ -1,0 +1,90 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>机构管理</h1>
+	<ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i>系统元数据管理</a></li>
+    <li><a href="#"><i class="fa fa-table"></i>基础管理</a></li>
+    <li class="active">新增机构</li>
+	</ol>
+</section>
+<!-- Main content -->
+<section id="container" class="content">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box box-primary">
+				<div class="box-header with-border">
+					<h3 class="box-title">机构管理</h3>
+					<div class="box-tools pull-right">
+						<button id="abc" class="btn btn-box-tool" data-widget="collapse">
+							<i class="fa fa-minus"></i>
+						</button>
+					</div>
+				</div>
+				<div class="box-body">
+					<form action="" id="add_form">
+						<div class="row">
+							<div class="col-xs-6">
+								<div class="form-group">
+									<input type=hidden id="guid" name="guid" /> <label
+										for="orgName">机构名称:</label> <input id="orgName" type="text"
+										name="orgName" class="form-control"
+										validateType="lengthRange-1-20" placeholder="机构名称">
+								</div>
+								<div class="form-group">
+									<label for="orgCode">机构代码:</label> <input id="orgCode"
+										type="text" name="orgCode" class="form-control"
+										placeholder="机构代码" validateType="lengthRange-1-100">
+								</div>
+								<div class="form-group">
+									<label for="parentCode">上级机构:</label> <input id="parentCode"
+										name="parentCode" class="form-control"
+										validateType="lengthRange-0-100" placeholder="上级机构" />
+								</div>
+								<div class="form-group">
+									<label for="level">机构层级:</label> <input id="level" type="text"
+										treeselector="radio" realVal name="level" class="form-control"
+										placeholder="机构层级" validateType="lengthRange-0-10|beDigits">
+								</div>
+
+								<input id="state" name="state" type="hidden"
+									class="form-control" placeholder="节点状态" value="1"
+									validateType="lengthRange-1-20">
+
+								<div class="form-group">
+									<label>是否有效:</label> <label for="aliveFlag1"><input
+										id="aliveFlag1" name="aliveFlag" type="radio" value="1"
+										placeholder="状态" validateType="lengthRange-1-20" checked>
+										有效 </label> <label for="aliveFlag0"><input id="aliveFlag0"
+										name="aliveFlag" type="radio" value="0" placeholder="状态"
+										validateType="lengthRange-1-20"> 无效 </label>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="box-footer">
+					<div class="form-group">
+						<button class="btn btn-primary" onclick="addForm('orgService','insert','add_form')">保存</button>
+						<button class="btn btn-primary"
+							onclick="loadContext('page/sys/org/org.html')">返回列表</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- /.content -->
+<script type="text/javascript">
+	$.AdminLTE.boxWidget.activate();
+	$(document).ready(function() {
+		var treeSelector = new TreeSelectorWeaver("container","treeModal", "treeul", "parentCode", false);
+		treeSelector.weave('./dispatcherAction/execute.do?service=orgService&method=queryGridTreeNew',{}, function(item) {
+			var item_n = item;
+			item_n.id = item.orgCode;
+			item_n.pId = item.parentCode;
+			item_n.name = item.orgName;
+			item_n.url = "";
+			return item_n;				
+		});				
+	});
+</script>

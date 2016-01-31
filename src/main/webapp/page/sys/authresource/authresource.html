@@ -1,0 +1,219 @@
+<section class="content-header">
+  <h1>
+               资源授权
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i>系统元数据管理</a></li>
+    <li><a href="#"><i class="fa fa-table"></i>资源授权</a></li>
+    <li class="active">资源授权中心</li>
+  </ol>
+</section>
+<section id="addContent" class="content">
+  <div class="row">
+	 <div class="col-md-6">
+	      <div class="box box-primary">
+	        <div class="box-header with-border">
+	          <h3 class="box-title">角色列表</h3>
+	          <div class="box-tools pull-right">
+                  <button id="abc" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+               </div>
+	        </div>
+	        <div class="box-body">
+	          <div class="row">
+	          <form action="" id="queryForm">
+	           <div class="col-xs-8">
+		           <div class="input-group input-group">
+                    <div class="input-group-btn">
+                      <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span id="inputlabel">角色代码</span><span class="fa fa-caret-down"></span></button>
+                      <ul class="dropdown-menu">
+                        <li><a href="javascript:void(0);" onclick="$('#inputlabel').html('角色代码');$('#roleinput').attr('name','roleCode');">角色代码</a></li>
+                        <li><a href="javascript:void(0);" onclick="$('#inputlabel').html('角色名称');$('#roleinput').attr('name','roleName');">角色名称</a></li>
+                      </ul>
+                    </div>
+                    <input id="roleinput" name="roleCode" type="text" class="form-control">
+                    <span class="input-group-btn"><button type="button" class="btn btn-default" onclick="queryRole();">
+                     <i class="fa fa-search"></i></button></span>
+                  </div>
+	           </div>
+	          </form>
+	           <div class="col-xs-12" style="padding: 10px;">
+		            <div>
+			        <table id="table"></table>
+			        <div style="text-align:right;">
+			            <div id="paginator"></div>
+			        </div>
+			       </div>
+	           </div>
+	          </div>
+	        </div>
+	   </div>
+	 </div>
+ 	 <div class="col-md-6">
+      <div class="box box-primary">
+        <div class="box-header with-border">
+          <h3 class="box-title">菜单资源列表</h3>
+          <div class="box-tools pull-right">
+             <button id="abc" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+          </div>
+        </div>
+        <div class="box-header with-border">
+	          <button id="savebt" data-loading-text="处理中" type="button" class="btn btn-primary" onclick="insert();">提交</button> 
+	     </div>
+        <div class="box-body">
+          <div class="row">
+            <div id="menuTree" class="ztree">
+            </div>
+          </div> 
+        </div>
+   </div>
+ </div>
+ </div>
+</section>
+<script type="text/javascript">
+   $.AdminLTE.boxWidget.activate();
+</script>
+<script type="text/javascript">
+var ztree;
+function loadMMGrid(){
+	  var cols = [{ name:'guid', hidden:true},
+	              { title:'角色编号', name:'roleCode', width: 220, align: 'center'},
+	              { title:'角色名称', name:'roleName' ,width:230, align:'center'}
+	          ];
+      mmGrid =  $('#table').mmGrid({
+          indexCol: true,
+          height: '350',
+          indexColWidth: 35,
+          cols: cols,
+          url: './dispatcherAction/queryByMMGrid.do?service=roleService&method=queryByPage',
+          method: 'post',
+          root: 'items',
+          nowrap:true,
+          plugins : [
+              $('#paginator').mmPaginator()
+          ]
+      });
+      mmGrid.on("cellSelected",function(e, item, rowIndex, colIndex){
+    	ztree.checkAllNodes(false);
+    	var rainbow = new Rainbow();
+    	rainbow.setParam("roleGuid",item.guid)
+  		rainbow.setService("authresouceService");
+  		rainbow.setMethod("query");
+  		rainbowAjax.query(rainbow,new function(){
+  			this.onSuccess = function(data) {
+  				 var nodes = ztree.getNodes();
+  		  		  $.each(nodes,function(index1,item1){
+  		  			var childNodes = [];
+  	      			childNodes = getAllChildrenNodes(nodes[index1],childNodes);
+  		      			$.each(childNodes,function(index2,item2){
+  		      				for(var i=0;i< data.rows.length;i++){
+  		      	              	var item = data.rows[i];
+  			      	            if(childNodes[index2].id == item.resourceCode){
+  		                			ztree.checkNode(item2,true,true);
+  		                			break;
+  			                	}
+  		      	            }
+  			           });
+  		           });
+  			  };
+  		});
+      }).load();
+}
+
+/**
+ * 获取所有子节点
+ */
+function getAllChildrenNodes(treeNode,nodes){
+    if (treeNode.isParent) {
+      var childrenNodes = treeNode.children;
+      if (childrenNodes) {
+          for (var i = 0; i < childrenNodes.length; i++) {
+              nodes.push(childrenNodes[i]);
+              getAllChildrenNodes(childrenNodes[i], nodes);
+          }
+      }
+  }
+  return nodes;
+}
+
+var Menu_Callback = function(){
+	this.onSuccess = function(data) {
+			var setting = {check : {enable : true},
+				data : {simpleData : {enable : true}}};
+			var zNodes = [];
+            for(var i=0;i< data.rows.length;i++){
+            	var item = data.rows[i];
+        		item.pId = data.rows[i].parentCode;
+        		item.name = data.rows[i].text;
+        		item.url ="";
+        		zNodes.push(item);
+            }
+			$.fn.zTree.init($("#menuTree"), setting,zNodes);
+		    ztree = $.fn.zTree.getZTreeObj("menuTree");
+		    ztree.expandAll(true);
+		};
+		this.onFail = function(jqXHR, textStatus, errorThrown) {
+		};
+	};
+	
+	var Add_Callback = function(){
+   		this.onSuccess=function(data){
+   			try {
+   				var j_obj = data;
+   				if (j_obj.success) {
+   					showDialog($("#addContent"),"新增","操作成功!","success");
+   				}else{
+   					showDialog($("#addContent"),"","操作失败!","danger");
+   				}
+   				if($("button[data-loading-text]")){
+   					$("button[data-loading-text]").button('reset');
+   				}
+   			} catch (e) {
+   				alert("异常!")
+   			}
+   		};
+   		this.onFail = function(jqXHR, textStatus, errorThrown){
+   			showDialog($("#addContent"),"","操作失败!","danger");
+   		};
+	   };
+	function loadMenuTree() {
+		var rainbow = new Rainbow();
+		rainbow.setService("menuService");
+		rainbow.setMethod("queryMenusNew");
+		rainbowAjax.query(rainbow, new Menu_Callback());
+	}
+	
+	function insert(){
+	  if(mmGrid != null){
+		  if(mmGrid.selectedRows().length == 0){
+				showDialog($("#addContent"),"警告信息","先选择角色！","warning");
+			}else{
+				var nodes = ztree.getCheckedNodes(true);
+				if(nodes.length == 0){
+					showDialog($("#addContent"),"警告信息","菜单资源为空！","warning");
+				}else{
+					  $("#savebt").button("loading");
+					  var rainbow = new Rainbow();
+					  var ids = [];
+					  $.each(nodes,function(index,item){
+						  ids.push({id:item.id});
+					  })
+					  rainbow.setRows(ids);
+					  rainbow.set('roleGuid',mmGrid.selectedRows()[0].guid);
+					  rainbow.set('roleCode',mmGrid.selectedRows()[0].roleCode);
+					  rainbow.setService("authresouceService");
+				      rainbow.setMethod("insert");
+				      rainbowAjax.excute(rainbow, new Add_Callback()); 
+				}
+			}
+	  }
+	}
+	
+	function queryRole(){
+		mmGrid.load(serializeObject($("#queryForm"),false));
+	}
+	
+	$(document).ready(function() {
+		loadMMGrid();// 加载表格控件
+		loadMenuTree();//加载菜单树
+	});
+</script>
