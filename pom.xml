@@ -31,6 +31,22 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
+				<mvn.dubbo.container>log4j,spring</mvn.dubbo.container>
+				<mvn.dubbo.application.name>rainbow-web</mvn.dubbo.application.name>
+				<mvn.dubbo.application.owner></mvn.dubbo.application.owner>
+		
+				<mvn.dubbo.registry.protocol>zookeeper</mvn.dubbo.registry.protocol>
+				<mvn.dubbo.registry.address>192.168.220.162:2181,192.168.220.163:2181,192.168.220.164:2181</mvn.dubbo.registry.address>
+				<mvn.dubbo.registry.file>./registry/rainbow/rainbow-web.cache</mvn.dubbo.registry.file>
+				
+				<mvn.dubbo.log4j.file>./dubbo/rainbow-web.log</mvn.dubbo.log4j.file>
+				<mvn.dubbo.log4j.level>ERROR</mvn.dubbo.log4j.level>
+		
+				<mvn.dubbo.protocol.port>20886</mvn.dubbo.protocol.port>
+				<mvn.dubbo.protocol.dispatcher>all</mvn.dubbo.protocol.dispatcher>
+				<mvn.dubbo.protocol.threadpool>fixed</mvn.dubbo.protocol.threadpool>
+				<mvn.dubbo.protocol.threads>100</mvn.dubbo.protocol.threads>
+				<!-- end dubbo -->
 <!-- 				<mvn.jdbc.driverClassName>org.sqlite.JDBC</mvn.jdbc.driverClassName>
 				<mvn.jdbc.url>jdbc:sqlite:${webapp.root}/WEB-INF/db/rainbow-web.db</mvn.jdbc.url>
 				<mvn.jdbc.username></mvn.jdbc.username>
@@ -89,7 +105,7 @@
 		<maven-war-plugin.version>3.2</maven-war-plugin.version>
 		<java.version>1.7</java.version>
 
-		<rainbow-common.version>1.5.12-RELEASE</rainbow-common.version>
+		<rainbow-common.version>1.6.0-RELEASE</rainbow-common.version>
 		<spring-framework.version>4.1.6.RELEASE</spring-framework.version>
 
 		<commons-beanutils.version>1.8.3</commons-beanutils.version>
@@ -142,21 +158,6 @@
 			<version>${druid-version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-annotations</artifactId>
-			<version>${jackson-annotations}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-core</artifactId>
-			<version>${jackson-core}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>${jackson-databind}</version>
-		</dependency>
 		<dependency>
 			<groupId>org.xerial</groupId>
 			<artifactId>sqlite-jdbc</artifactId>
