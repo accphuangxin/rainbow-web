@@ -10,12 +10,10 @@
 	* 3.在target目录下有已经打好包的linux版本和windows版本。
 	* 4.解压rainbow-web-1.0-SNAPSHOT-20160201001420-win.zip,双击start.bat
 	* 5.访问地址:
-	 * 1.http://localhost:8082/rainbow
-      测试一个service
-	 * 2.http://localhost:8082/rainbow/dispatcherAction/query.do?service=demoService&method=show
-	* 测试一个访问数据库的service
-	 * 执行SQL脚本。t_sys_yser.sql 在项目的根录下。
-	
+	 * 访问服务地址:http://localhost:8082/rainbow
+  	 * 测试服务地址:http://localhost:8082/rainbow/dispatcherAction/query.do?service=demoService&method=show
+* 测试一个访问数据库的service
+	* 执行SQL脚本。t_sys_yser.sql 在项目的根录下。
 	* 配置数据库地址：在pom.xml中修改
 	
 	```xml
@@ -38,7 +36,8 @@
 				<mvn.jdbc.username>***</mvn.jdbc.username>
 				<mvn.jdbc.password>****</mvn.jdbc.password>
 ```
-	* 重新启动start.bat
+
+* 重新启动start.bat
 	* 访问地址：
 		* 批量添加:
 	http://localhost:8082/rainbow/dispatcherAction/execute.do?service=crudService&method=insertBatch
